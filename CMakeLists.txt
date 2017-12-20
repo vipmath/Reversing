@@ -7,6 +7,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(Boost 1.64 COMPONENTS program_options system REQUIRED)
+find_package(Threads)
 
 include_directories(${Boost_INCLUDE_DIR})
 

@@ -9,6 +9,8 @@ class Board
 public:
     Board();
 
+    Board Copy() const;
+
     bool IsOnBoard(const Point& pt) const;
     bool IsValidMove(const Point& pt) const;
     bool IsEnd() const;

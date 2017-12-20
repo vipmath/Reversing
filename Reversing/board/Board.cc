@@ -10,6 +10,20 @@ Board::Board()
     Clear();
 }
 
+Board Board::Copy() const
+{
+    Board ret;
+
+    std::copy(board_.begin(), board_.end(), ret.board_.begin());
+    ret.current_player_ = current_player_;
+    ret.is_end_ = is_end_;
+    ret.black_stones_ = black_stones_;
+    ret.white_stones_ = white_stones_;
+    std::copy(history_.begin(), history_.end(), ret.history_.begin());
+
+    return ret;
+}
+
 bool Board::IsOnBoard(const Point& pt) const
 {
     return (pt.X >= 0 && pt.X < BOARD_SIZE) && (pt.Y >= 0 && pt.Y < BOARD_SIZE);

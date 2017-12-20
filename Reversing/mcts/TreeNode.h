@@ -13,7 +13,7 @@ class TreeNode : public std::enable_shared_from_this<TreeNode>
 public:
     using Ptr = std::shared_ptr<TreeNode>;
 
-    static constexpr float Vl = 3.f;
+    static constexpr int Vl = 3;
     static constexpr float puct = 5;
 
 public:
@@ -38,6 +38,7 @@ public:
     float GetQValue() const;
 
     void Update(int w, bool own = true);
+    void SetV(float v);
 
 private:
     Ptr parent_;
@@ -46,7 +47,8 @@ private:
     Point action_;
 
     std::atomic<float> P_;
-    std::atomic<float> W_;
+    std::atomic<float> v_;
+    std::atomic<int> W_;
     std::atomic<int> N_;
 
     bool is_expanded_;

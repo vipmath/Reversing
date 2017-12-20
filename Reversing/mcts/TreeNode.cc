@@ -4,7 +4,8 @@ TreeNode::TreeNode(Point action, float P, TreeNode::Ptr parent)
     : action_(action), P_(P), parent_(parent), is_expanded_(false)
 {
     W_ = 0;
-    N_ = 0;    
+    N_ = 0;
+    v_ = 0;
 }
 
 TreeNode::Ptr TreeNode::Select()
@@ -18,7 +19,7 @@ TreeNode::Ptr TreeNode::Select()
 
     for (size_t i = 0; i < children_.size(); ++i)
     {
-        float q = (GetVisits()) ? W_.load() / GetVisits() : 0;
+        float q = GetQValue();
         float u = TreeNode::puct * children_[i]->P_.load() * std::sqrt(total_games) / (1.f + GetVisits());
 
         if (q + u > max_value)
@@ -111,7 +112,7 @@ int TreeNode::GetVisits() const
 
 float TreeNode::GetQValue() const
 {
-    float q = (GetVisits()) ? W_.load() / GetVisits() : 0;
+    float q = (GetVisits()) ? (W_.load() + v_.load()) / GetVisits() : 0;
 
     return q;
 }
@@ -121,7 +122,12 @@ void TreeNode::Update(int w, bool own)
     if (parent_ != nullptr)
         parent_->Update(w, !own);
 
-    N_ += 1;
-    std::atomic_fetch_add(&W_, w * (own ? 1.f : -1.f));
-    std::atomic_fetch_sub(&W_, TreeNode::Vl);
+    atomic_fetch_add(&N_, 1);
+    atomic_fetch_add(&W_, w * (own ? 1 : -1));
+    atomic_fetch_sub(&W_, TreeNode::Vl);
+}
+
+void TreeNode::SetV(float v)
+{
+    v_ = v;
 }
